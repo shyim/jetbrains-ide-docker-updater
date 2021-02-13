@@ -18,7 +18,7 @@ async function main() {
             ghConfig.matrix.include.push({
                 name: `${productKey} ${release.version}`,
                 runs: {
-                    build: ` cd projector-docker; ./build-container.sh ghcr.io/shyim/jetbrains-ide/${productKey}:${release.version} ${release.downloads.linux.link}; docker push ghcr.io/shyim/jetbrains-ide/${productKey}:${release.version}`
+                    build: ` cd projector-docker; ./build-container.sh ghcr.io/shyim/jetbrains-ide/${productKey.toLowerCase()}:${release.version} ${release.downloads.linux.link}; docker push ghcr.io/shyim/jetbrains-ide/${productKey.toLowerCase()}:${release.version}`
                 }
             });
         }
