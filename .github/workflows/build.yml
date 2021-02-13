@@ -1,0 +1,45 @@
+name: CI
+on:
+  push:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  generate-jobs:
+    name: Generate Jobs
+    runs-on: ubuntu-20.04
+    outputs:
+      strategy: ${{ steps.generate-jobs.outputs.strategy }}
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: denolib/setup-deno@master
+      with:
+        deno-version: v1.x
+
+    - id: generate-jobs
+      name: Generate Jobs
+      run: |
+        deno run --allow-net build.ts
+        strategy="$(deno run --allow-net build.ts)"
+        echo $strategy
+        echo "::set-output name=strategy::$strategy"
+
+  build:
+    needs: generate-jobs
+    strategy: ${{ fromJson(needs.generate-jobs.outputs.strategy) }}
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login into Github Docker Registery
+        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u shyim --password-stdin
+
+      - name: Clone projector
+        run: |
+          git clone https://github.com/JetBrains/projector-docker
+          cd projector-docker && ./clone-projector-core.sh
+
+      - name: Build ${{ matrix.name }}
+        run: ${{ matrix.runs.build }}
