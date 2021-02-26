@@ -1,6 +1,7 @@
 const productKeys = [
     'PS', // PhpStorm
     'GO', // GoLand
+    'IIU', // InteliJ Ultimate
 ];
 
 async function main() {
