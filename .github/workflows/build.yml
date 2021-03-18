@@ -40,7 +40,7 @@ jobs:
         run: |
           git clone https://github.com/JetBrains/projector-docker
           cd projector-docker && ./clone-projector-core.sh
-          git -C ../projector-server checkout 4b83de9ea3a477414e6a92a038f7c304332a7ea1
+          # git -C ../projector-server checkout 4b83de9ea3a477414e6a92a038f7c304332a7ea1
 
       - name: Build ${{ matrix.name }}
         run: ${{ matrix.runs.build }}
